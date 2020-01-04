@@ -93,6 +93,14 @@ rfc3987 = ">=1.3.8"
 
 [[package]]
 category = "main"
+description = "Data validation and settings management using python 3.6 type hinting"
+name = "pydantic"
+optional = false
+python-versions = ">=3.6"
+version = "1.3"
+
+[[package]]
+category = "main"
 description = "Persistent/Functional/Immutable data structures"
 name = "pyrsistent"
 optional = false
@@ -161,7 +169,7 @@ version = "0.6.0"
 more-itertools = "*"
 
 [metadata]
-content-hash = "acf4133f2255cdaeb83e8418b37ade360d00ed61d1834845ff0a94b793c60c22"
+content-hash = "01edcd95e82745521452cca7a3d2c94e883be558e9443f457d03b2e33b9c9ab3"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -174,6 +182,7 @@ importlib-metadata = ["073a852570f92da5f744a3472af1b61e28e9f78ccf0c9117658dc32b1
 jsonschema = ["4e5b3cf8216f577bee9ce139cbe72eca3ea4f292ec60928ff24758ce626cd163", "c8a85b28d377cc7737e46e2d9f2b4f44ee3c0e1deac6bf46ddefc7187d30797a"]
 more-itertools = ["b84b238cce0d9adad5ed87e745778d20a3f8487d0f0cb8b8a586816c7496458d", "c833ef592a0324bcc6a60e48440da07645063c453880c9477ceb22490aec1564"]
 notifiers = ["171ae79215fcf119e34992ad7e1f95f0709f93997203b3fc6f115b5cedd780a6", "34625af405f4aa19293eaaefe145ccc92c6018ae9798f53a03a7fcc996e541aa"]
+pydantic = ["176885123dfdd8f7ab6e7ba1b66d4197de75ba830bb44d921af88b3d977b8aa5", "2b32a5f14558c36e39aeefda0c550bfc0f47fc32b4ce16d80dc4df2b33838ed8", "2eab7d548b0e530bf65bee7855ad8164c2f6a889975d5e9c4eefd1e7c98245dc", "479ca8dc7cc41418751bf10302ee0a1b1f8eedb2de6c4f4c0f3cf8372b204f9a", "59235324dd7dc5363a654cd14271ea8631f1a43de5d4fc29c782318fcc498002", "87673d1de790c8d5282153cab0b09271be77c49aabcedf3ac5ab1a1fd4dcbac0", "8a8e089aec18c26561e09ee6daf15a3cc06df05bdc67de60a8684535ef54562f", "b60f2b3b0e0dd74f1800a57d1bbd597839d16faf267e45fa4a5407b15d311085", "c0da48978382c83f9488c6bbe4350e065ea5c83e85ca5cfb8fa14ac11de3c296", "cbe284bd5ad67333d49ecc0dc27fa52c25b4c2fe72802a5c060b5f922db58bef", "d03df07b7611004140b0fef91548878c2b5f48c520a8cb76d11d20e9887a495e", "d4bb6a75abc2f04f6993124f1ed4221724c9dc3bd9df5cb54132e0b68775d375", "dacb79144bb3fdb57cf9435e1bd16c35586bc44256215cfaa33bf21565d926ae", "dd9359db7644317898816f6142f378aa48848dcc5cf14a481236235fde11a148"]
 pyrsistent = ["f3b280d030afb652f79d67c5586157c5c1355c9a58dfc7940566e28d28f3df1b"]
 python-dotenv = ["debd928b49dbc2bf68040566f55cdb3252458036464806f4094487244e2a4093", "f157d71d5fec9d4bd5f51c82746b6344dffa680ee85217c123f4a0c8117c4544"]
 requests = ["11e007a8a2aa0323f5a921e9e6a2d7e4e67d9877e85773fba9ba6419025cbeb4", "9cf5292fcd0f598c671cfc1e0d7d1a7f13bb8085e9a590f48c010551dc6c4b31"]

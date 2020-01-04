@@ -1,7 +1,23 @@
 import os
+import datetime as dt
+from typing import Optional
 
 from dotenv import load_dotenv
 from notifiers import notify, Response
+from pydantic import BaseModel
+
+
+class NotificationSchedule(BaseModel):
+    """
+    Расписание уведомления
+    Пример: присылать 2 раза в день пуш в промежуток от 13 до 01
+    >>> NotificationSchedule(message="test", from_time=dt.time(13), to_time=dt.time(1), times=2)
+    """
+    id: Optional[int]
+    message: str
+    from_time: dt.time
+    to_time: dt.time
+    times: int
 
 
 class PushoverNotificationSender:
@@ -29,6 +45,8 @@ def main() -> None:
     sender = PushoverNotificationSender(PUSHOVER_USER, PUSHOVER_TOKEN)
     message = 'test'
     sender.send(message)
+
+    # todo уведомления:
 
 
 if __name__ == '__main__':
