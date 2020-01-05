@@ -14,6 +14,11 @@ def main() -> None:
     message = 'test'
     sender.send(message)
 
+    # todo создать расписание, сгенерить пуши по расписанию, положить в редиску, ждать когда таск-кью отправит
+    # https://github.com/coleifer/huey
+    # https://github.com/rq/rq
+
+
 
 
 if __name__ == '__main__':
