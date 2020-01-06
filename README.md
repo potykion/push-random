@@ -8,3 +8,6 @@
 
 - https://devcenter.heroku.com/articles/python-rq
 - https://devcenter.heroku.com/articles/scheduler
+
+- https://github.com/andymccurdy/redis-py
+- https://pypi.org/project/fakeredis/
