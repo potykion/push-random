@@ -11,3 +11,7 @@
 
 - https://github.com/andymccurdy/redis-py
 - https://pypi.org/project/fakeredis/
+
+- https://github.com/coleifer/huey
+- https://github.com/rq/rq
+- https://github.com/rq/rq-scheduler
