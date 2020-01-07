@@ -7,12 +7,12 @@ class NotificationSchedule(BaseModel):
     """
     Расписание уведомления
     Пример: присылать 2 раза в день пуш в промежуток от 13 до 01
-    >>> NotificationSchedule(message="test", from_time=dt.time(13), to_time=dt.time(1), times=2)
+    >>> NotificationSchedule(message="test", from_time=dt.time(13), to_time=dt.time(1), freq=2)
     """
     message: str
     from_time: dt.time
     to_time: dt.time
-    times: int
+    freq: int
 
 
 class Notification(BaseModel):

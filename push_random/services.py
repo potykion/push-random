@@ -1,9 +1,15 @@
 from typing import List
+from typing_extensions import Protocol
 
 from notifiers import Response, notify
 
 from push_random.db import NotificationRepository
 from push_random.models import NotificationSchedule, Notification
+
+
+class NotificationSender(Protocol):
+    def send(self, message: str) -> bool:
+        ...
 
 
 class PushoverNotificationSender:
@@ -23,12 +29,19 @@ class PushoverNotificationSender:
         return res.ok
 
 
+class FakeNotificationSender:
+    """Класс для отправки фейковых уведомлений"""
+
+    def send(self, message: str) -> bool:
+        return True
+
+
 class NotificationService:
     """
     Класс для работы с уведомлениями: создание/получение расписания уведомлений, создание/планирование/отправка уведомлений
     """
 
-    def __init__(self, repo: NotificationRepository, sender: PushoverNotificationSender) -> None:
+    def __init__(self, repo: NotificationRepository, sender: NotificationSender) -> None:
         self.repo = repo
         self.sender = sender
 
@@ -47,4 +60,3 @@ class NotificationService:
     def send_notification(self, notification: Notification) -> None:
         """Отправляет уведомление"""
         self.sender.send(notification.text)
-
