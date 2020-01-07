@@ -1,15 +1,12 @@
 import os
 from typing import Callable
 
-import fakeredis
 import redis
 from dependency_injector import containers, providers
-from dotenv import load_dotenv
 
 from push_random.db import NotificationRepository
-from push_random.services import PushoverNotificationSender, FakeNotificationSender, NotificationService
+from push_random.services import PushoverNotificationSender, NotificationService, FakeNotificationSender
 
-load_dotenv()
 
 class AppContainer(containers.DeclarativeContainer):
     redis_cli = providers.Singleton(redis.from_url, os.getenv("REDIS_URL"))
@@ -31,7 +28,9 @@ class AppContainer(containers.DeclarativeContainer):
     )
 
 
-if os.getenv("TEST"):
-    AppContainer.redis_cli.override(providers.Singleton(fakeredis.FakeStrictRedis))
-    AppContainer.notification_sender.override(providers.Singleton(FakeNotificationSender))
+@containers.copy(AppContainer)
+class TestContainer(containers.DeclarativeContainer):
+    import fakeredis
 
+    redis_cli = providers.Singleton(fakeredis.FakeStrictRedis)
+    notification_sender = providers.Singleton(FakeNotificationSender)
