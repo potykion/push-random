@@ -3,9 +3,12 @@ from typing import Callable
 
 import redis
 from dependency_injector import containers, providers
+from dotenv import load_dotenv
 
 from push_random.db import NotificationRepository
 from push_random.services import PushoverNotificationSender, NotificationService, FakeNotificationSender
+
+load_dotenv()
 
 
 class AppContainer(containers.DeclarativeContainer):
