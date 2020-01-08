@@ -10,6 +10,7 @@ class NotificationRepository:
     """Класс для работы с бд (redis) уведомлений и их расписаний"""
 
     SCHEDULE_PREFIX = "sch"
+    NOTIFICATION_PREFIX = "notif"
 
     def __init__(self, redis: Redis):
         self.redis = redis
@@ -36,4 +37,13 @@ class NotificationRepository:
 
     def insert_notifications(self, notifications: List[Notification]) -> None:
         """Сует уведомления в бд"""
-        pass
+        for notification in notifications:
+            id_ = self._generate_id(self.NOTIFICATION_PREFIX)
+            self.redis.set(id_, notification.json())
+
+    def get_notifications(self) -> List[Notification]:
+        """Получает все уведомления"""
+        keys = self.redis.keys(f"{self.NOTIFICATION_PREFIX}-*")
+        notifications = [Notification.from_json_str(self.redis.get(key)) for key in keys]
+        return notifications
+

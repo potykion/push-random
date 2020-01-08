@@ -24,12 +24,37 @@ class NotificationSchedule(FromJsonStringMixin):
     to_time: dt.time
     freq: int
 
+    @property
+    def from_datetime(self):
+        return (
+            dt.datetime.now()
+                .replace(
+                    hour=self.from_time.hour,
+                    minute=self.from_time.minute,
+                    second=self.from_time.second,
+                    microsecond=self.from_time.microsecond
+                )
+        )
+
+    @property
+    def to_datetime(self):
+        delta_days = 1 if self.from_time > self.to_time else 0
+        return (
+            (dt.datetime.now() + dt.timedelta(delta_days))
+                .replace(
+                    hour=self.to_time.hour,
+                    minute=self.to_time.minute,
+                    second=self.to_time.second,
+                    microsecond=self.to_time.microsecond
+                )
+        )
+
 
 class Notification(FromJsonStringMixin):
     """
     Уведомление
     Пример: прислать уведомление с текстом "test" 2020-01-06 в 14:49
-    >>> Notification(text="test", datetime=dt.datetime(2020, 1, 6, 14, 49))
+    >>> Notification(message="test", sending_dt=dt.datetime(2020, 1, 6, 14, 49))
     """
-    text: str
-    datetime: dt.datetime
+    message: str
+    sending_dt: dt.datetime

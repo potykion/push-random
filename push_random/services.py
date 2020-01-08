@@ -1,5 +1,7 @@
+import random
 from typing import List
 from typing_extensions import Protocol
+import datetime as dt
 
 from notifiers import Response, notify
 
@@ -55,8 +57,23 @@ class NotificationService:
 
     def create_notifications(self, sch: NotificationSchedule) -> List[Notification]:
         """По расписанию создает рандомные уведомления и сует в очередь задач"""
-        pass
+        # считаем диапазон, в котором будем отправлять уведомления
+        datetime_diff = (sch.to_datetime - sch.from_datetime).total_seconds()
+        # создаем даты, в которые будет отправлять уведомления
+        notification_datetimes = [
+            sch.from_datetime + dt.timedelta(seconds=random.randint(0, datetime_diff))
+            for _ in range(sch.freq)
+        ]
+        # создаем уведомления
+        notifications = [
+            Notification(message=sch.message, sending_dt=datetime)
+            for datetime in notification_datetimes
+        ]
+        # суем все это в редиску
+        self.repo.insert_notifications(notifications)
+
+        return notifications
 
     def send_notification(self, notification: Notification) -> None:
         """Отправляет уведомление"""
-        self.sender.send(notification.text)
+        self.sender.send(notification.message)
