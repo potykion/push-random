@@ -33,6 +33,8 @@ b'{"message": "test", "from_time": "13:00:00", "to_time": "01:00:00", "freq": 2}
 [b'sch-0c4d92c2-a15a-4548-a6f6-9d150bcc7178']
 ```
 
+- Почистить редиску: `redis_cli.delete(*redis_cli.keys("notif-*"))`
+
 ## Ссылки
 
 - Redis + Python: https://github.com/andymccurdy/redis-py
