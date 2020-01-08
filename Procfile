@@ -1,1 +1,1 @@
-worker: rqscheduler
+worker: rqscheduler -u $REDIS_URL
