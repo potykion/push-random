@@ -63,8 +63,8 @@ def fake_sender(message, **settings):
 class NotificationScheduler:
     """Класс для работы с планировщиком уведомлений"""
 
-    def __init__(self, redis: Redis, sender: NotificationSender, sender_settings: Dict) -> None:
-        self.rq_scheduler = Scheduler(connection=redis)
+    def __init__(self, rq_scheduler: Scheduler, sender: NotificationSender, sender_settings: Dict) -> None:
+        self.rq_scheduler = rq_scheduler
         self.sender = sender
         self.sender_settings = sender_settings
 

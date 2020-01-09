@@ -4,6 +4,7 @@ from typing import Callable
 import redis
 from dependency_injector import containers, providers
 from dotenv import load_dotenv
+from rq_scheduler import Scheduler
 
 from push_random.services import NotificationService, NotificationScheduleRepository, NotificationScheduler, \
     pushover_sender, fake_sender
@@ -13,6 +14,8 @@ load_dotenv()
 
 class AppContainer(containers.DeclarativeContainer):
     redis_cli = providers.Singleton(redis.from_url, os.getenv("REDIS_URL"))
+    rq_scheduler: Callable[[], Scheduler] = providers.Singleton(Scheduler, connection=redis_cli)
+
     schedule_repo: Callable[[], NotificationScheduleRepository] = providers.Factory(
         NotificationScheduleRepository,
         redis_cli
@@ -26,7 +29,7 @@ class AppContainer(containers.DeclarativeContainer):
 
     notification_scheduler: Callable[[], NotificationScheduler] = providers.Factory(
         NotificationScheduler,
-        redis=redis_cli,
+        rq_scheduler=rq_scheduler,
         sender=notification_sender,
         sender_settings=notification_sender_settings
     )

@@ -35,7 +35,12 @@ def create_notifications() -> None:
 
     Пример:
     python manage.py create-notifications
+    """
+    create_notifications_for_all_schedules()
 
+
+def create_notifications_for_all_schedules():
+    """
     Берет все расписания, для каждого создает уведомления.
     """
     service = AppContainer.notification_service()
@@ -46,3 +51,19 @@ def create_notifications() -> None:
         click.echo(f"Создано {sch.freq} уведомлений для расписания: {sch}:")
         for index, notification in enumerate(notifications):
             click.echo(f"  - {index + 1}. {notification}")
+
+
+@cli.command()
+@click.argument("cron_str")
+def create_create_notifications_cron(cron_str: str) -> None:
+    """
+    cli для создания крона для создания уведомлений
+
+    Пример:
+    python manage.py create-create-notifications-cron "0 21 * * *"
+
+    Создает rq-scheduler крон, который будет дергать create_notifications каждый день в 21:00 по utc
+    """
+    scheduler = AppContainer.rq_scheduler()
+    scheduler.cron(cron_str, create_notifications_for_all_schedules)
+    click.echo("Крон создан")
