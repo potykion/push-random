@@ -6,7 +6,7 @@ from dependency_injector import containers, providers
 from dotenv import load_dotenv
 
 from push_random.services import NotificationService, NotificationScheduleRepository, NotificationScheduler, \
-    PushoverNotificationSender, FakeNotificationSender
+    pushover_sender, fake_sender
 
 load_dotenv()
 
@@ -18,23 +18,23 @@ class AppContainer(containers.DeclarativeContainer):
         redis_cli
     )
 
-    notification_sender = providers.Singleton(
-        PushoverNotificationSender,
-        os.getenv("PUSHOVER_USER"),
-        os.getenv("PUSHOVER_TOKEN")
-    )
+    notification_sender = providers.Object(pushover_sender)
+    notification_sender_settings = providers.Object({
+        "user": os.getenv("PUSHOVER_USER"),
+        "token": os.getenv("PUSHOVER_TOKEN")
+    })
 
     notification_scheduler: Callable[[], NotificationScheduler] = providers.Factory(
         NotificationScheduler,
-        redis_cli,
-        notification_sender
+        redis=redis_cli,
+        sender=notification_sender,
+        sender_settings=notification_sender_settings
     )
 
     notification_service: Callable[[], NotificationService] = providers.Factory(
         NotificationService,
-        schedule_repo,
-        notification_scheduler,
-        notification_sender
+        repo=schedule_repo,
+        scheduler=notification_scheduler,
     )
 
 
@@ -43,4 +43,5 @@ class TestContainer(containers.DeclarativeContainer):
     import fakeredis
 
     redis_cli = providers.Singleton(fakeredis.FakeStrictRedis)
-    notification_sender = providers.Singleton(FakeNotificationSender)
+    notification_sender = providers.Object(fake_sender)
+    notification_sender_settings = providers.Object({})

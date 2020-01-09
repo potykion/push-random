@@ -1,9 +1,9 @@
+import datetime as dt
 import random
 import uuid
-from typing import List
-import datetime as dt
+from typing import List, Any, Dict
 
-from notifiers import Response, notify
+from notifiers import notify
 from redis import Redis
 from rq_scheduler import Scheduler
 from typing_extensions import Protocol
@@ -41,45 +41,42 @@ class NotificationScheduleRepository:
 
 
 class NotificationSender(Protocol):
-    def send(self, message: str) -> bool:
+    """Интерфейс для отправки уведомлений"""
+    def __call__(self, message: str, **settings: Any) -> Any:
         ...
 
 
-class PushoverNotificationSender:
+def pushover_sender(message, **settings):
     """
-    Класс для отправки уведомлений с помощью Pushover
+    Отправляет уведомления с помощью Pushover
     https://pushover.net/
-    https://github.com/notifiers/notifiers
+    https://github.com/notifiers/notifiers#basic-usage
     """
-
-    def __init__(self, user: str, token: str) -> None:
-        self.service = 'pushover'
-        self.user = user
-        self.token = token
-
-    def send(self, message: str) -> bool:
-        res: Response = notify(self.service, user=self.user, token=self.token, message=message)
-        return res.ok
+    return notify("pushover", message=message, **settings)
 
 
-class FakeNotificationSender:
-    """Класс для отправки фейковых уведомлений"""
-
-    def send(self, message: str) -> bool:
-        return True
+def fake_sender(message, **settings):
+    """Не отправляет уведомления с помощью Pushover"""
+    return
 
 
 class NotificationScheduler:
     """Класс для работы с планировщиком уведомлений"""
 
-    def __init__(self, redis: Redis, sender: NotificationSender):
+    def __init__(self, redis: Redis, sender: NotificationSender, sender_settings: Dict) -> None:
         self.rq_scheduler = Scheduler(connection=redis)
         self.sender = sender
+        self.sender_settings = sender_settings
 
     def schedule(self, notifications) -> None:
         """Планирует уведомления (ставит в очередь)"""
         for notification in notifications:
-            self.rq_scheduler.enqueue_at(notification.sending_dt, self.sender.send, notification.message)
+            self.rq_scheduler.enqueue_at(
+                notification.sending_dt,
+                self.sender,
+                notification.message,
+                **self.sender_settings
+            )
 
     def get_scheduled_notifications(self) -> List[Notification]:
         """Получает список запланированных уведомлений"""
@@ -89,18 +86,16 @@ class NotificationScheduler:
 
 class NotificationService:
     """
-    Класс для работы с уведомлениями: создание/получение расписания уведомлений, создание/планирование/отправка уведомлений
+    Класс для работы с уведомлениями и расписаниями уведомлений
     """
 
     def __init__(
         self,
         repo: NotificationScheduleRepository,
         scheduler: NotificationScheduler,
-        sender: NotificationSender
     ) -> None:
         self.schedule_repo = repo
         self.notification_scheduler = scheduler
-        self.notification_sender = sender
 
     def create_schedule(self, sch: NotificationSchedule) -> None:
         """Создает расписание уведомления"""
@@ -128,7 +123,3 @@ class NotificationService:
         self.notification_scheduler.schedule(notifications)
 
         return notifications
-
-    def send_notification(self, notification: Notification) -> None:
-        """Отправляет уведомление"""
-        self.notification_sender.send(notification.message)

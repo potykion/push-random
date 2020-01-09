@@ -22,4 +22,4 @@ def test_create_notifications(container: AppContainer, schedule: NotificationSch
 
     assert len(notifications) == schedule.freq
     assert all(schedule.to_datetime >= notif.sending_dt >= schedule.from_datetime for notif in notifications)
-    assert len(container.notification_scheduler().get_scheduled_notifications()) == 3
+    assert len(container.notification_scheduler().get_scheduled_notifications()) == schedule.freq
