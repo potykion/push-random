@@ -16,7 +16,7 @@ class FromJsonStringMixin(BaseModel):
 class NotificationSchedule(FromJsonStringMixin):
     """
     Расписание уведомления
-    Пример: присылать 2 раза в день пуш в промежуток от 13 до 01
+    Пример: присылать 2 раза в день пуш в промежуток от 13 до 01 (по utc)
     >>> NotificationSchedule(message="test", from_time=dt.time(13), to_time=dt.time(1), freq=2)
     """
     message: str
