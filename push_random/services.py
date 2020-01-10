@@ -80,7 +80,7 @@ class NotificationScheduler:
 
     def get_scheduled_notifications(self) -> List[Notification]:
         """Получает список запланированных уведомлений"""
-        scheduled = list(self.rq_scheduler.get_jobs())
+        scheduled = list(self.rq_scheduler.get_jobs(with_times=True))
         return scheduled
 
 
@@ -104,6 +104,12 @@ class NotificationService:
     def get_schedules(self) -> List[NotificationSchedule]:
         """Получает все расписания уведомлений"""
         return self.schedule_repo.get_schedules()
+
+    def create_notification(self, message: str, sending_dt: dt.datetime) -> Notification:
+        """Создает и планирует уведомление"""
+        notification = Notification(message=message, sending_dt=sending_dt)
+        self.notification_scheduler.schedule([notification])
+        return notification
 
     def create_notifications(self, sch: NotificationSchedule) -> List[Notification]:
         """По расписанию создает рандомные уведомления и сует в очередь задач"""
