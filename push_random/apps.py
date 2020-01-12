@@ -60,7 +60,7 @@ def create_create_notifications_cron(cron_str: str) -> None:
     cli для создания крона для создания уведомлений
 
     Пример:
-    python manage.py create-create-notifications-cron "0 21 * * *"
+    python manage.py create-create-notifications-cron "0 0 * * *"
 
     Создает rq-scheduler крон, который будет дергать create_notifications каждый день в 21:00 по utc
     """

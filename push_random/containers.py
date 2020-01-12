@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from rq_scheduler import Scheduler
 
 from push_random.services import NotificationService, NotificationScheduleRepository, NotificationScheduler, \
-    pushover_sender, fake_sender
+    pushover_sender
 
 load_dotenv()
 
@@ -41,10 +41,3 @@ class AppContainer(containers.DeclarativeContainer):
     )
 
 
-@containers.copy(AppContainer)
-class TestContainer(containers.DeclarativeContainer):
-    import fakeredis
-
-    redis_cli = providers.Singleton(fakeredis.FakeStrictRedis)
-    notification_sender = providers.Object(fake_sender)
-    notification_sender_settings = providers.Object({})
