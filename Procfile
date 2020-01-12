@@ -1,1 +1,2 @@
-worker: rq worker -u $REDIS_URL & rqscheduler -u $REDIS_URL && fg
+worker: rq worker -u $REDIS_URL
+scheduler: rqscheduler -u $REDIS_URL
